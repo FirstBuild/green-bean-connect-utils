@@ -1,0 +1,32 @@
+{
+  "name": "hack-the-home-2015",
+  "version": "0.0.1",
+  "description": "",
+  "main": "",
+  "engines": {
+    "node": ">=0.8"
+  },
+  "os": [
+    "darwin",
+    "linux"
+  ],
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/firstbuild/hack-the-home-2015"
+  },
+  "keywords": [
+  ],
+  "author": "Myles Caley",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "password-generator": "~0.2.4",
+    "firebase": "~2.2.3",
+    "node-uuid": "~1.4.3",
+    "moniker": "~0.1.2"
+  }
+}
