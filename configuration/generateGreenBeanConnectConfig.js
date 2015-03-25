@@ -1,3 +1,7 @@
+// generates a chillhub.json configuration file 
+// this file needs to be copied to /root/chillhub.json
+// change firebase url, user and password if you wish
+// NOTE: the firebase username and password is stored in this json
 
 var Firebase = require('firebase');
 var uuid = require('node-uuid');
@@ -6,11 +10,6 @@ var fs = require('fs');
 var generatePassword = require('password-generator');
 var Moniker = require('moniker');
 
-
-for (var i =0; i<50;i++)
-{
-    createuser();
-}
 
 function createuser() {
 
@@ -45,16 +44,16 @@ function createuser() {
             }, function(error, authData) {
                 if (error) {
                     console.log("Firebase login failed", error);
-                    //process.exit();
+                    process.exit();
                 } else {
                     console.log("Successfully created user account with uid:", authData.uid, " user: ", user, " password: ", firebasePassword, " token: ", authData.token);
                     fs.writeFile("chillhub.json" + "." + shortName, '{"uuid":"' + accessPointUUID + '", "passphrase":"' + accessPointPassword +'", "firebaseUrl":"https://firstbuild-sandbox.firebaseio.com/","token":"' + authData.token + '", "firebaseUsername":"' + user+ '","firebasePassword":"' + firebasePassword + '"}\r\n', function(err) {
                         if (err) {
                             console.log("Unable to create chillhub.json");
-                            //process.exit();
+                            process.exit();
                         } else {
                             console.log("Successfully created chillhub.json");
-                            //process.exit();
+                            process.exit();
                         }
                     });
                 }
