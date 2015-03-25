@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+
+cd /root
+
+case "$1" in
+
+init)
+  echo 6 > /proc/sys/kernel/printk
+
+  gpio -g mode 17 input
+  gpio -g mode 17 up
+  gpio -g mode 18 output
+  gpio export 18 output
+  gpio export 17 input
+;;
+
+update)
+  shift
+
+  dock pull firstbuild/chillhub-commissioning
+  dock pull firstbuild/chillhub-firmware
+;;
+
+run)
+  shift
+  dock run firstbuild/chillhub-commissioning --privileged -v /root:/src/share -v /sys/class/gpio:/sys/class/gpio -p 80:80
+
+  if [[ "$(pifi wlan0 -s)" == "WiFi_Connected" ]]; then
+    dock run firstbuild/chillhub-firmware --privileged -v /root:/src/share -v /dev:/dev 
+  else
+    dock stop firstbuild/chillhub-firmware
+  fi
+;;
+
+*)
+;;
+
+esac
+
+exit 0

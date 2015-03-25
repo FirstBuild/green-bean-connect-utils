@@ -1,0 +1,137 @@
+#!/usr/bin/env bash
+
+ercho() {
+  >&2 echo $@
+}
+
+json_value() {
+  v=$(echo "$1" | grep "$2")
+  v=${v##*\"$2\": \"}
+  echo ${v%%\"*}
+}
+
+dock_release() {
+  release=$(curl -fsSL "https://api.github.com/repos/$1/releases?per_page=1" 2>/dev/null)
+
+  if [[ -z "$release" ]]; then
+    ercho "$1 is not a valid GitHub repository"
+    exit 1
+  fi
+
+  tag_name=$(json_value "$release" 'tag_name') 
+  tarball_url=$(json_value "$release" 'tarball_url')
+  image_name="$1:$tag_name"
+
+  if [[ -z "$tag_name" ]]; then
+    ercho "The GitHub repository $1 has no releases"
+    exit 1
+  fi
+}
+
+dock_pull() {
+  dock_release $1
+  
+  current_tag_name=$(docker images | grep $1 | awk '{print $2}')
+  current_image=$(docker images | grep $1 | awk '{print $3}')
+  current_container=$(docker ps -a | grep $1 | awk '{print $1}')
+
+  if [[ "$current_tag_name" == "$tag_name" ]]; then
+    echo "$1:$tag_name is up-to-date"
+  else
+    pushd $(mktemp -d) &>/dev/null
+
+    curl -fsSL $tarball_url 2>/dev/null | tar zxp --strip-components=1 
+    
+    docker build -t $1:$tag_name . || {
+      ercho "Failed to build docker image for $1"
+      rm -rf $(pwd)
+      exit 1
+    }
+    
+    rm -rf $(pwd)
+    popd &>/dev/null
+
+    docker stop $current_container &>/dev/null
+    docker rm $(docker ps -a -q) &>/dev/null
+    docker rmi $current_image $(docker images | grep '^<none>' | awk '{print $3}') &>/dev/null
+  fi
+}
+
+dock_run() {
+  repo="$1"
+  shift
+
+  current_image=$(docker images | grep $repo | awk '{print $3}')
+  current_container=$(docker ps | grep $repo | awk '{print $1}')
+
+  if [[ -z "$current_image" ]]; then
+    dock_pull $repo
+  elif [[ -z "$current_container" ]]; then
+    docker rm $(docker ps -a | grep $repo | awk '{print $1}') &>/dev/null
+    
+    docker run $@ -d $current_image || {
+      ercho "Failed to start docker container for $repo"
+      exit 1
+    }
+  fi
+}
+
+dock_stop() {
+  current_container=$(docker ps | grep $1 | awk '{print $1}')
+  docker stop $current_container &>/dev/null
+  docker rm $(docker ps -a | grep $1 | awk '{print $1}') &>/dev/null
+}
+
+case "$1" in
+
+release)
+  shift
+
+  if [[ $# -eq 1 ]]; then
+    dock_release $@
+    echo $tag_name
+  else
+    ercho "Usage: dock release <owner/repo>"
+    exit 1
+  fi
+;;
+
+pull)
+  shift
+
+  if [[ $# -eq 1 ]]; then
+    dock_pull $@
+  else
+    ercho "Usage: dock pull <owner/repo>"
+    exit 1
+  fi
+;;
+
+run)
+  shift
+
+  if [[ $# -ge 1 ]]; then
+    dock_run $@
+  else
+    ercho "Usage: dock run <owner/repo> [options]"
+    exit 1
+  fi
+;;
+
+stop)
+  shift
+
+  if [[ $# -eq 1 ]]; then
+    dock_stop $@
+  else
+    ercho "Usage: dock stop <owner/repo>"
+    exit 1
+  fi
+;;
+
+*)
+;;
+
+esac
+
+exit 0

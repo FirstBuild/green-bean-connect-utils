@@ -1,0 +1,10 @@
+[Unit]
+Description=ChillHub Init Service
+Documentation=
+After=
+
+[Service]
+ExecStart=/usr/bin/chillhub init
+
+[Install]
+WantedBy=multi-user.target

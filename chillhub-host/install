@@ -1,0 +1,145 @@
+#!/usr/bin/env bash
+
+######################################################
+# rough script to get chillhub running on a vanilla
+# instance of arch
+#
+# used as a general guideline, no real error handling
+# use ethernet to get everything going first
+######################################################
+
+MACHINE="$(uname -m)"
+RELEASE="$(uname -r)"
+IS_ARCH="$(uname -r | grep -i ARCH)"
+HAS_GIT="$(type git)"
+HAS_WIRELESS_TOOLS="$(type iwlist)"
+HAS_WPA_SUPPLICANT="$(type wpa_supplicant)"
+HAS_DHCP="$(type dhcpd)"
+HAS_CRON="$(type crontab)"
+HAS_DOCKER="$(type docker)"
+HAS_PIFI="$(type pifi)"
+HAS_GPIO="$(type gpio)"
+HAS_NODE="$(type node)"
+HAS_PYTHON="$(type python)"
+HAS_MAKE="$(type make)"
+HAS_GCC="$(type gcc)"
+HAS_MDNS="$(type avahi-browse)"
+
+update_packages() {
+  if [[ "$HAS_UPDATED" == "" ]]; then
+    pacman -Syy --noconfirm
+    HAS_UPDATED=1
+  fi
+}
+
+echo "What would you like to do? 1=Base Install, 2=Docker Container Development, 3=Local ChillHub Development"
+read option
+pacman -Syu
+
+if [ "$option" == "1" ]; then
+    cd /root/chillhub-host
+    cp ./pifi.service /usr/lib/systemd/system
+    cp ./milkyweigh.conf /etc/modprobe.d
+
+    systemctl enable pifi.service
+    systemctl disable systemd-resolved.service
+    unlink /etc/resolv.conf
+    cp ./resolv.conf /etc/resolv.conf
+
+    if [[ "$HAS_GIT" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm git
+    fi
+
+    if [[ "$HAS_WIRELESS_TOOLS" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm wireless_tools
+    fi
+
+    if [[ "$HAS_WPA_SUPPLICANT" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm wpa_supplicant
+    fi
+
+    if [[ "$HAS_DHCP" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm dhcp
+    fi
+
+    if [[ "$HAS_GPIO" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm wiringpi
+    fi
+    
+    if [[ "$HAS_MDNS" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm avahi nss-mdns
+    fi
+
+    if [[ "$HAS_PIFI" == "" ]]; then
+      update_packages
+      git clone https://github.com/bakerface/pifi
+      cd pifi
+      sh install
+    fi
+
+elif [ "$option" == "2" ]; then
+    if [[ "$HAS_DOCKER" == "" ]]; then
+      update_packages
+      pacman -S --noconfirm docker
+      systemctl enable docker
+      reboot
+      exit 0
+    fi
+    cp ./chillhub-*service /usr/lib/systemd/system
+    cp ./chillhub /usr/bin/chillhub
+    cp ./dock /usr/bin/dock
+    systemctl enable chillhub-init.service
+    systemctl enable chillhub-run.service
+    systemctl enable chillhub-update.service
+    dock pull firstbuild/chillhub-commissioning
+    dock pull firstbuild/chillhub-firmware
+
+elif [ "$option" == "3" ]; then
+
+    cd /root
+
+    if [[ "$HAS_NODE" == "" ]]; then
+        echo "installing build essentials for node..."
+        if [[ "$HAS_PYTHON" == "" ]]; then
+              echo "installing python"
+              pacman -S --noconfirm python2
+              ln -s /usr/bin/python2 /usr/bin/python
+        fi
+        if [[ "$HAS_MAKE" == "" ]]; then
+              echo "installing make"
+              pacman -S --noconfirm make
+        fi
+        if [[ "$HAS_GCC" == "" ]]; then
+              echo "installing gcc"
+              pacman -S --noconfirm gcc
+        fi
+
+      echo "downloading and building node, grab a coffee this is going to take awhile..."
+      curl -O http://nodejs.org/dist/v0.10.36/node-v0.10.36.tar.gz
+      tar -xzvf node-v0.10.36.tar.gz
+      cd /root/node-v0.10.36
+      ./configure
+      make -j5
+      make install
+    fi
+
+
+    echo "downloading and installing chillhub-firmware..."
+    cd /root; git clone https://github.com/firstbuild/chillhub-firmware
+    npm config set python python2
+    cd /root/chillhub-firmware; npm install
+    cd /root/chillhub-host
+    npm install firebase node-uuid
+    node firebaseSetup > ./credentials.log 2>&1
+    mkdir /root/chillhub-firmware/share
+    mv ./chillhub.json /root/chillhub-firmware/share/chillhub.json
+    echo "Done! Firebase config file is located at /root/chillhub-firmware/share/chillhub.json"
+    echo "Firebase credentials are stored at /root/chillhub-host/credentials.log"
+
+fi
