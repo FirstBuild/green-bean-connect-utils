@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# simple commissioning script, must be in access point point, i.e. led blinking
+
 if [ -z "$1" ]; then
 	echo "usage: sh commission.sh SSID passphrase"
 	exit 1
