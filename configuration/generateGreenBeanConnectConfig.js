@@ -1,5 +1,5 @@
 // generates a chillhub.json configuration file 
-// this file needs to be copied to /root/chillhub.json
+// this file needs to be copied to /root/chillhub.json ( you can also use the output of this for manualCommission.js)
 // change firebase url, user and password if you wish
 // NOTE: the firebase username and password is stored in this json
 
@@ -10,8 +10,9 @@ var fs = require('fs');
 var generatePassword = require('password-generator');
 var Moniker = require('moniker');
 
+generate();
 
-function createuser() {
+function generate() {
 
     var firebasePassword = generatePassword(8, true);
     var accessPointUUID = uuid.v1();
@@ -62,6 +63,7 @@ function createuser() {
         }
     });
 }
+
 
 
 

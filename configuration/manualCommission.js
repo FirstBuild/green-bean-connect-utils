@@ -1,5 +1,5 @@
 //script to manually commssion green bean connect
-//node manualCommission.js --ssid=1stbuild --ssid_password=firstbuild --url=https://firstbuild-sandbox.firebaseio.com/ --token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ2IjowLCJkIjp7InByb3ZpZGVyIjoicGFzc3dvcmQiLCJ1aWQiOiJzaW1wbGVsb2dpbjoxMTMifSwiaWF0IjoxNDI3MjI0MDk4fQ.wnUYgxnppE1_tmPZ96mAQoeTSSmXyN3WjavidizU4Xw
+//node manualCommission.js --ssid=1stbuild --ssid_password=firstbuild --url=https://firstbuild-sandbox.firebaseio.com/ --token=
 
 //no error handling
 
