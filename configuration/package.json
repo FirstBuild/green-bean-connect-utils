@@ -27,6 +27,8 @@
     "password-generator": "~0.2.4",
     "firebase": "~2.2.3",
     "node-uuid": "~1.4.3",
-    "moniker": "~0.1.2"
+    "moniker": "~0.1.2",
+    "minimist": "~1.1.1",
+    "http-post": "~0.1.1"
   }
 }
