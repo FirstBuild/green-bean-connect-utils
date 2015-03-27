@@ -1,0 +1,28 @@
+{
+  "name": "pimdns",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.8"
+  },
+  "os": [
+    "linux"
+  ],
+  "scripts": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://"
+  },
+  "keywords": [
+  ],
+  "author": "Myles Caley",
+  "license": "MIT",
+  "readmeFilename": "README.md",
+  "devDependencies": {
+  },
+  "dependencies": {
+    "mdns": "~2.2.1"
+  }
+}
