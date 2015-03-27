@@ -2,7 +2,7 @@
   "name": "pimdns",
   "version": "0.0.1",
   "description": "",
-  "main": "index.js",
+  "main": "",
   "engines": {
     "node": ">=0.8"
   },
