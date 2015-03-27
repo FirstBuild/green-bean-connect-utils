@@ -14,7 +14,6 @@ read input
 if [ ${#input} -lt 1 ]; then
     FIREBASE_SANDBOX='firstbuild-sandbox'
 else
-    echo "its longer"
     FIREBASE_SANDBOX=$input
 fi
 
