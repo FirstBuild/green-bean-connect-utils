@@ -5,7 +5,8 @@
 3. npm install
 4. node generateFirebaseLoginAndToken (modify firebase url if you don't want to use FirstBuild's sandbox)
 
-This will create a new user in the firebase you specified and generate a firebase file. with credentials. Simple login must be enabled on the firebase instance you are using (it is on FirstBuild sandbox). Now that you have the information necessary to setup your Green Bean Connect Perform the next steps:
+
+This will create a new user in the firebase you specified and generate a firebase file. with credentials. By default it creates a make believe user, so modify if you would like to create with a valid email. Simple login must be enabled on the firebase instance you are using (it is on FirstBuild sandbox). Now that you have the information necessary to setup your Green Bean Connect Perform the next steps:
 
 
 1. Press and release the black button on the top of the box, the LED should be blinking. This indicates it is in access point mode. 
