@@ -2,7 +2,7 @@
 //to find use:
 //	osx: dns-sd -L ChillHub-0ec5e4d0 _http._tcp (replace with service name that you need)
 //linux: avahi-browse _http._tcp
-var config = require('./chillhub.json');
+var config = require('/root/chillhub.json');
 
 var advertiseName = "ChillHub-" + config.uuid.substring(0,8);
 

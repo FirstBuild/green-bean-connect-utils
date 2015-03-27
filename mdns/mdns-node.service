@@ -1,0 +1,11 @@
+[Service]
+ExecStart=/usr/local/bin/node /root/green-bean-connect-utils/mdns/advertise.js
+Restart=always
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=node-mdns
+User=root
+Group=root
+
+[Install]
+WantedBy=multi-user.target
