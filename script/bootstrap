@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -x
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+PRJ_ROOT=$(dirname "${SCRIPT_DIR}")
+cd $PRJ_ROOT/configuration
+
+npm install
+
+read "Do you want to use FirstBuild's firebase sandbox, or your own? (y/n)> "
+# if no, use default: https://firstbuild-sandbox.firebaseio.com/
+# if yes, prompt to enter a firebase sandbox
+
+# Pass as env var to generateFireBaseLoginAndToken
+node generateFirebaseLoginAndToken
