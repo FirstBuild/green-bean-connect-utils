@@ -3,20 +3,10 @@
 ```
 git clone https://github.com/FirstBuild/green-bean-connect-utils
 cd green-bean-connect-utils/configuration
-npm install
+./script/bootstrap
 ```
 
-If you want to use something other than FirstBuild's firebase sandbox, edit generateFirebaseLoginAndToken:
-```
-var ref = new Firebase('https://firstbuild-sandbox.firebaseio.com/'); //<---change to url you want
-```
-
-Finally, run
-
-```
-node generateFirebaseLoginAndToken
-```
-
+After npm install runs, you'll be prompted to enter a Firebase sandbox name. If you want to use FirstBuild's, just hit enter.
 
 This will create a new user in the firebase you specified and generate a firebase file. with credentials. By default it creates a make believe user, so modify if you would like to create with a valid email. Simple login must be enabled on the firebase instance you are using (it is on FirstBuild sandbox). Now that you have the information necessary to setup your Green Bean Connect Perform the next steps:
 
