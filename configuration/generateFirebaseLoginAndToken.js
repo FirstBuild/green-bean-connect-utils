@@ -2,7 +2,7 @@
 
 var Firebase = require('firebase');
 var uuid = require('node-uuid');
-var ref = new Firebase('https://firstbuild-sandbox.firebaseio.com/'); //<---change to url you want
+var ref = new Firebase(process.env.FIREBASE_SANDBOX_URL); //<---change to url you want
 var fs = require('fs');
 var generatePassword = require('password-generator');
 var Moniker = require('moniker');
