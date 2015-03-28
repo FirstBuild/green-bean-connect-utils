@@ -11,7 +11,7 @@ echo "Enter YOUR_FIREBASE: (https://<YOUR_FIREBASE>.firebaseio.com), or hit ente
 printf "> "
 read input
 
-if [ ${#input} -lt 1 ]; then
+if [[ -z $input ]]; then
     FIREBASE_SANDBOX='firstbuild-sandbox'
 else
     FIREBASE_SANDBOX=$input
