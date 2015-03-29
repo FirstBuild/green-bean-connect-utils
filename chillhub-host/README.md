@@ -55,7 +55,7 @@ The ChillHub firmware is now installed. To run it (need to restart after each pi
 2. ```node chillhub```
 
 
-#### OPTION2 - install and configure chillhub in docker containers (INCOMPLETE DOCUMENTATION)
+#### OPTION2 - install and configure chillhub in docker containers 
 
 1.  ```cd /root/chillhub-host; sh install``` (choose option 2)
 2.  This will reboot the pi after docker has installed, *repeat the step above when you log back in*. If you are using the optional wireless config then you now need to run the following command: ```pifi wlan0 -w "SSID" "passphrase"```
