@@ -1,11 +1,11 @@
-var os = require('os');
-var Firebase = require('firebase');
 // installation:
 // $ npm install firebase
 
 // usage:
 // $ node firebase-ip.js
 
+var os = require('os');
+var Firebase = require('firebase');
 var chillhub = require('./chillhub.json');
 var ref = new Firebase('https://firstbuild-sandbox.firebaseio.com');
 
