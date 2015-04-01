@@ -1,5 +1,11 @@
 var os = require('os');
 var Firebase = require('firebase');
+// installation:
+// $ npm install firebase
+
+// usage:
+// $ node firebase-ip.js
+
 var chillhub = require('./chillhub.json');
 var ref = new Firebase('https://firstbuild-sandbox.firebaseio.com');
 
@@ -21,7 +27,9 @@ ref.authWithCustomToken(chillhub.token, function(err, auth) {
 
   var content = { ip_address: ip_address('wlan0') || null };
 
-  ref.child('users').child(auth.uid).update(content, function(err) {
-    process.exit(0);
-  });
+  ref.child('users').child(auth.uid)
+    .child('devices').child('chillhubs').child(chillhub.uuid)
+    .update(content, function(err) {
+      process.exit(0);
+    });
 });
