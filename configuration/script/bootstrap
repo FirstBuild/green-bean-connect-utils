@@ -1,0 +1,26 @@
+#!/bin/bash
+
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}")" && pwd )"
+PRJ_ROOT=$(dirname "${SCRIPT_DIR}")
+cd $PRJ_ROOT
+
+npm install
+
+echo "Let's pick a firebase sandbox."
+echo "Enter YOUR_FIREBASE: (https://<YOUR_FIREBASE>.firebaseio.com), or hit enter"
+printf "> "
+read input
+
+if [[ -z $input ]]; then
+    FIREBASE_SANDBOX='firstbuild-sandbox'
+else
+    FIREBASE_SANDBOX=$input
+fi
+
+# Pass as env var to generateFireBaseLoginAndToken
+export FIREBASE_SANDBOX_URL="https://$FIREBASE_SANDBOX.firebaseio.com/"
+
+echo "Using $FIREBASE_SANDBOX_URL"
+
+node generateFirebaseLoginAndToken
+
